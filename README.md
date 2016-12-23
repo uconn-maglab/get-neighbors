@@ -2,8 +2,6 @@
 
 >Python script to find the phonological neighbors of a list of words, using the deletion, addition, substitution rule ("DAS," Luce & Pisoni, 1998).
 
-Work in progress. Documentation will be written as the project develops.
-
 This uses the [IPhOD2 database](http://iphod.com) (Vaden, Halpin, & Hickok,
 2009), but any corpus can be used, as long as it contains only the phonological
 transcriptions, one per line. (See uconn-maglab/words-only if you need to 
