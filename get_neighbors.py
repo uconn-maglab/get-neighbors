@@ -34,18 +34,19 @@ class NeighborHunt:
 
     def check_addition(self, base, candidate):
         strikes = 0
-        # position = 0
-        # while strikes < 2 and position < len(base):
         for position in range(len(base)):
-            # for position in range(len(word)):
-            if base[position] == candidate[position+strikes]:
-                # position += 1
-                continue
-            else:
-                strikes += 1
-                # position += 1
-                if strikes >= 2:
-                    return False
+            while True:
+                # If they match, break the while loop and try the next position.
+                if base[position] == candidate[position+strikes]:
+                    break
+                    # continue
+                # Otherwise, take a strike and continue on that position,
+                # as long as it's the first strike. If it's the second strike,
+                # then they are not neighbors, so return False.
+                else:
+                    strikes += 1
+                    if strikes >= 2:
+                        return False
         else:
             return True
 
@@ -59,7 +60,7 @@ class NeighborHunt:
                 else:
                     strikes += 1
                     if strikes >= 2:
-                    return False
+                        return False
         else:
             return True
 
@@ -76,6 +77,11 @@ class NeighborHunt:
             return True
 
 if __name__ == "__main__":
-    neighbor_test = NeighborHunt(words="tests/test_monos.txt",
-                                 corpus="tests/iphod_subset.txt")
-    neighbor_test.find(debug=True)
+    # neighbor_test = NeighborHunt(words="tests/test_monos.txt",
+    #                             corpus="tests/iphod_subset.txt")
+    # neighbor_test.find(debug=True)
+
+    mono_neighbors = NeighborHunt()
+    mono_neighbors.find(debug=True)
+    with open("iphod_mono_neighbors.json", "w") as f:
+        json.dump(mono_neighbors.neighbors, f, indent=4)
