@@ -14,24 +14,68 @@ class NeighborHunt:
         with open(corpusfile, "r") as cf:
             self.corpus = [word[:-1] for word in cf.readlines()]
 
-    def find(self):
+    def find(self, debug=False):
         for word in self.words:
-            wlen = len(word)
+            print(word) if debug else None
             self.neighbors[word] = []
-            word = word.split(self.sep)
+            wsplit = word.split(self.sep)
+            wlen = len(wsplit)
             for q in self.corpus:
-                if len(q) == wlen:
-                    self.check_substitution(word, q.split(self.sep))
-                elif len(q) == wlen+1:
-                    self.check_addition(word, q.split(self.sep))
-                elif len(q) == wlen-1:
-                    self.check_deletion(word, q.split(self.sep))
+                print("\t", q) if debug else None
+                qsplit = q.split(self.sep)
+                if len(qsplit) == wlen:
+                    self.neighbors[word].append(q) if self.check_substitution(wsplit, qsplit) else None
+                elif len(qsplit) == wlen+1:
+                    self.neighbors[word].append(q) if self.check_addition(wsplit, qsplit) else None
+                elif len(qsplit) == wlen-1:
+                    self.neighbors[word].append(q) if self.check_deletion(wsplit, qsplit) else None
                 else:
                     continue
 
     def check_addition(self, base, candidate):
-        counter = 0
-        # while counter < 2:
-            for position in range(len(word)):
-                if word[position] == candidate[position+counter]:
-                    pass
+        strikes = 0
+        # position = 0
+        # while strikes < 2 and position < len(base):
+        for position in range(len(base)):
+            # for position in range(len(word)):
+            if base[position] == candidate[position+strikes]:
+                # position += 1
+                continue
+            else:
+                strikes += 1
+                # position += 1
+                if strikes >= 2:
+                    return False
+        else:
+            return True
+
+    def check_deletion(self, base, candidate):
+        strikes = 0
+        for position in range(len(candidate)):
+            while True:
+                if base[position+strikes] == candidate[position]:
+                    break
+                    # continue
+                else:
+                    strikes += 1
+                    if strikes >= 2:
+                    return False
+        else:
+            return True
+
+    def check_substitution(self, base, candidate):
+        strikes = 0
+        for position in range(len(base)):
+            if base[position] == candidate[position]:
+                continue
+            else:
+                strikes += 1
+                if strikes >= 2:
+                    return False
+        else:
+            return True
+
+if __name__ == "__main__":
+    neighbor_test = NeighborHunt(words="tests/test_monos.txt",
+                                 corpus="tests/iphod_subset.txt")
+    neighbor_test.find(debug=True)
